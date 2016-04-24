@@ -1,0 +1,52 @@
+[user]
+	email = ianwen@chromium.org
+	name = Ian Wen
+[core]
+	editor = vim
+	whitespace = fix,-indent-with-non-tab,trailing-space
+	pager = less -FRSX
+
+[alias]
+	amend = "commit --amend"
+	#br = "! branch() {[]}"
+	bd = branch -D
+	co = checkout
+	cp = cherry-pick
+	ca = commit -amend -a --no-edit
+	cam = "commit -am 'just a small change'"
+	cia = commit -a
+	df = diff
+	dfs = diff --stat
+	dfn = diff --numstat
+	dt = difftool
+	dtm = difftool -d master
+	ign = ls-files -o -i --exclude-standard
+	logf = log --format=fuller
+	logme = log --author=ianwen
+	logp = log -p
+	mt = mergetool
+	ru = ! git rebase -i $(git merge-base @{u} HEAD)
+	ss = show --stat
+	sn = show --numstat
+	st = status -sb
+
+[color]
+	ui = true
+
+[merge]
+	tool = mymeld
+	conflitstyle = diff3
+[mergetool]
+	prompt = false
+	keepBackup = false
+[mergetool "mymeld"]
+	cmd = meld "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+[diff]
+	tool = meld
+	renames = true
+[difftool]
+	prompt = false
+
+# Don't push remote branches that you don't care about.
+[push]
+	default = simple
