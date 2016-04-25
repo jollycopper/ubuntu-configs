@@ -53,20 +53,10 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/ian/config/scripts"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -74,10 +64,58 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
 alias l="ls -CF"
+alias gg='git grep'
+alias ggi='git grep -i'
+alias gg2="git grep -C2"
+alias gg3="git grep -C3"
+alias gg4="git grep -C4"
+
+# Find by exact filename
+fne() {
+  local filename="$1"
+  shift
+  if [[ "$filename" = */* ]]; then
+    find -path "*${filename}" "$@"
+  else
+    find -name "${filename}" "$@"
+  fi
+}
+
+# Find by case-insensitive partial filename
+fn() {
+  [[ $# -eq 0 ]] && return
+  local filename="$1"
+  shift
+  if [[ "$filename" = */* ]]; then
+    find -iwholename "*${filename}*" "$@"
+  else
+    find -iname "${filename}*" "$@"
+  fi
+}
+
+# Find and replace across a git repository. Examples:
+#
+#   git-replace oldMethodName newMethodName
+#   git-replace '#include "base/md5.h"' '#include "base/crypto/md5.h"'
+#
+# You can also use a git pathspec to limit the files that will be searched:
+#
+#   git-replace oldMethod newMethod -- "base/*.cc"
+#
+git-replace() {
+  if [[ $# -lt 2 ]]; then
+    echo "Usage: git-replace <query> <replacement> [<pathspec>...]"
+    return
+  fi
+  local query=$1
+  # Escape special characters so sed treats these as fixed strings.
+  # Characters escaped in the query: ] \ / $ * . ^ | [
+  # Characters escaped in the replacement: \ / &
+  # See: http://stackoverflow.com/a/2705678/598094
+  local escaped_query=$(echo $1 | sed -e 's/[]\/$*.^|[]/\\&/g')
+  local escaped_replacement=$(echo $2 | sed -e 's/[\/&]/\\&/g')
+  shift 2
+  git grep -lF "$query" -- "$@" \
+      | xargs sed -i "s/${escaped_query}/${escaped_replacement}/g"
+}

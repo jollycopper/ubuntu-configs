@@ -8,7 +8,9 @@
 
 [alias]
 	amend = "commit --amend"
-	#br = "! branch() {[]}"
+	# Creates a shell function called branch. If there are arguments, function as
+	# git branch; otherwise, call git_list_branches_by_date function in shell.
+	br = "! branch () { [ $# -eq 0 ] && git_list_branches_by_date || git branch \"$@\" ; }; branch"
 	bd = branch -D
 	co = checkout
 	cp = cherry-pick

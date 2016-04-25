@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+# Prints the list of branches and format the output using column.
+# Note this script only works in zsh.
+autoload -U colors && colors
+current_branch=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD)
+git for-each-ref --sort=-committerdate \
+    --format=$'  %(refname:short)  \t%(committerdate:short)\t%(authorname)\t%(objectname:short)' refs/heads \
+    | column -t -s $'\t' -n \
+    | sed -E "s:^  (${current_branch}) :* $bg[magenta]\1$reset_color :" \
+    | sed -E "s:^  ([^ ]+):  $fg[magenta]\1$reset_color:"
