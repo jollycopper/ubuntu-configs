@@ -53,10 +53,21 @@ plugins=(git)
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/ian/config/scripts"
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/ian/config/scripts:/home/ian/Android/Sdk/platform-tools:/home/ian/depot_tools"
 # export MANPATH="/usr/local/man:$MANPATH"
 
+export EDITOR="vim"
+
 source $ZSH/oh-my-zsh.sh
+
+# Git branch in prompt
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+RPROMPT=\$vcs_info_msg_0_
+# PROMPT=\$vcs_info_msg_0_'%# '
+zstyle ':vcs_info:git:*' formats '%b'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"

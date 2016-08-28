@@ -14,7 +14,7 @@
 	bd = branch -D
 	co = checkout
 	cp = cherry-pick
-	ca = commit -amend -a --no-edit
+	ca = commit --amend -a --no-edit
 	cam = "commit -am 'just a small change'"
 	cia = commit -a
 	df = diff
