@@ -130,3 +130,9 @@ git-replace() {
   git grep -lF "$query" -- "$@" \
       | xargs sed -i "s/${escaped_query}/${escaped_replacement}/g"
 }
+
+# The next line updates PATH for the Google Cloud SDK.
+source '/home/ian/anna/google-cloud-sdk/path.zsh.inc'
+
+# The next line enables shell command completion for gcloud.
+source '/home/ian/anna/google-cloud-sdk/completion.zsh.inc'
